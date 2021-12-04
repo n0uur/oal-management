@@ -4,6 +4,8 @@ AWS EC2 auto-scaling system using Python
 
 Project Status: `Planning`
 
+![aws-cloud-project drawio (1)](https://user-images.githubusercontent.com/50010805/144700727-8ed46fd7-9bb4-49a2-b02d-0a6434207274.png)
+
 ## Planned Tools
 ### Development Tools
 - [Python](https://www.python.org/) 3.7 or later
@@ -39,8 +41,6 @@ Project Status: `Planning`
 ## Resources
 - [Boto3 (AWS SDK)](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
 - [Flask Python Deployment](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#gunicorn)
-- 
-![aws-cloud-project drawio_2](https://user-images.githubusercontent.com/50010805/144700709-c93189af-17c9-40a0-9783-4837485e67df.png)
 
 
 
