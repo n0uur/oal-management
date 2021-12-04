@@ -39,5 +39,8 @@ Project Status: `Planning`
 ## Resources
 - [Boto3 (AWS SDK)](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
 - [Flask Python Deployment](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#gunicorn)
+- 
+![aws-cloud-project drawio_2](https://user-images.githubusercontent.com/50010805/144700709-c93189af-17c9-40a0-9783-4837485e67df.png)
+
 
 
