@@ -24,6 +24,7 @@ Project Status: `Planning`
 ### Python
 - [:x:] Auto create Target Group and ELB
 - [:x:] Add Instance to Target Group
+- [:x:] Create Key pair
 - [:x:] Create Instance from template and Create Template for creating instance (We need to figure this out quick)
 - [:x:] List all EC2 Instance from `Region` or `Tag`
 - [:x:] Terminate Instance
