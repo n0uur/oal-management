@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="login-container">
+    <div class="card login-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">เข้าสู่ระบบ</h3>
+            <h6 class="text-center">
+                รหัสผ่านคือ `88888888888888888`
+            </h6>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <div class="card-text">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="app_password">รหัสผ่าน</label>
+                        <input type="password" class="form-control form-control-sm" id="app_password" name="app_password" />
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block">เข้าสู่ระบบ</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

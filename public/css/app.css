@@ -1,0 +1,18 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap');
+
+body {
+    font-family: 'Bai Jamjuree', sans-serif;
+}
+
+.login-form{ 
+	width: 330px;
+	margin: 20px;
+}
+
+.login-container{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
