@@ -2,7 +2,7 @@
 OAL System
 AWS EC2 auto-scaling system using Python
 
-Project Status: `Planning`
+Project Status: `Coding`
 
 ![aws-cloud-project drawio (1)](https://user-images.githubusercontent.com/50010805/144700727-8ed46fd7-9bb4-49a2-b02d-0a6434207274.png)
 
@@ -28,10 +28,12 @@ Project Status: `Planning`
 - [:x:] Create Instance from template and Create Template for creating instance (We need to figure this out quick)
 - [:x:] List all EC2 Instance from `Region` or `Tag`
 - [:x:] Terminate Instance
-- [:x:] Get EC2 CPU Utilization
 - [:x:] All features above but in RestAPI
 - [:x:] RestAPI Authentication
 - [:x:] Storing Setting to DynamoDB or something else lightweight
+
+### Cancled
+- [:x:] Get EC2 CPU Utilization
 
 ### Management Website
 - [:x:] Login Page
