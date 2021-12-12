@@ -11,7 +11,8 @@ ec2 = boto3.resource('ec2')
 
 def getInstanceName(instance):
     try:
-        instance_name = [tag['Value'] for tag in instance.tags if tag['Key'] == 'Name']
+        instance_name = [tag['Value']
+                         for tag in instance.tags if tag['Key'] == 'Name']
         instance_name = instance_name[0]
     except Exception:
         instance_name = None
@@ -31,7 +32,8 @@ def getVPCName(instance):
 def getSubnetName(instance):
     try:
         subnet = ec2.Subnet(instance.subnet_id)
-        subnet_name = [tag['Value'] for tag in subnet.tags if tag['Key'] == 'Name']
+        subnet_name = [tag['Value']
+                       for tag in subnet.tags if tag['Key'] == 'Name']
         subnet_name = subnet_name[0]
     except Exception:
         subnet_name = None
@@ -39,14 +41,19 @@ def getSubnetName(instance):
 
 
 def getSecurityGroupsName(instance):
-    security_groups_list = [security_group['GroupName'] for security_group in instance.security_groups]
-    security_groups = ', '.join(security_groups_list) if security_groups_list else None
+    security_groups_list = [security_group['GroupName']
+                            for security_group in instance.security_groups]
+    security_groups = ', '.join(
+        security_groups_list) if security_groups_list else None
     return security_groups
 
 
 def getInstanceDetails():
+    """ Print EC2 Name & Id & state & public ip
+        & private ip & vpc name & subnet name
+        & security group name
+    """
     for instance in ec2.instances.all():
-        # print EC2 Name & Id & state & public ip & private ip & vpc name & subnet name & security group name
         print(
             "Name: {0}\n Id: {1}\n State: {2}\n Public IP: {3}\n Private IP: {4}\n "
             "VPC: {5}\n Subnet: {6}\n Security groups: {7}\n".format(
