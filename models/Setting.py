@@ -18,6 +18,9 @@ class Setting(Model):
         aws_access_key_id = os.environ.get("AWS_ACCESS_KEY")
         aws_secret_access_key = os.environ.get("AWS_SECRET_KEY")
 
+        write_capacity_units = 3 # payat for aj Lapas budget
+        read_capacity_units = 3 # payat for aj Lapas budget
+
     id = Attributes.UnicodeAttribute(hash_key=True)
     value = Attributes.UnicodeAttribute()
 

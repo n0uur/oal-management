@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="submit-container" id='app'>
+    <div class="card setup-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">อัปเดตระบบ</h3>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <div class="card-text">
+                <form method="post">
+                    <div class="form-group">
+                        <label for="app_version">เวอร์ชัน</label>
+                        <input type="text" class="form-control form-control-sm" id="app_version" name="app_version" placeholder="ตย. 1.2.3" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="app_public_key">Public Key (for deployment)</label>
+                        <textarea type="text" class="form-control form-control-sm" id="app_public_key" rows="10" readonly>{{ public_key }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="app_user_data">EC2 User Data</label>
+                        <textarea type="text" class="form-control form-control-sm" id="app_user_data" name="app_user_data" rows="20" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-info btn-block">อัปเดต</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+<script>
+
+new Vue({
+    el: '#app',
+    data() {
+        return {
+
+        }
+    },
+})
+</script>
+
+{% endblock %}

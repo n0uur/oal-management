@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="login-container">
+    <div class="card setup-form">
+        <div class="card-body">
+            <h3 class="card-title text-center">ตั้งค่าเริ่มต้นระบบ</h3>
+            <h6 class="text-center">
+                ตั้งค่าสำหรับใช้งานครั้งแรก
+            </h6>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <form method="post">
+                <button type="button" disabled class="btn btn-info btn-block">เริ่มต้นใช้งาน</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
