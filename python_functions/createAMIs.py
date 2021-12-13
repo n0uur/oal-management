@@ -15,6 +15,17 @@ def createAMI(instanceId):
         InstanceId=instanceId,
         Name="GitHub-Automation-AMI",
         Description="Created by GitHub-Automation",
+        TagSpecifications=[
+            {
+                'ResourceType': 'image',
+                'Tags': [
+                    {
+                        'Key': 'ict21',
+                        'Value': 'group5'
+                    },
+                ]
+            },
+        ],
     )
     return response['ImageId']
 
