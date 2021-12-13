@@ -1,43 +1,52 @@
-""" List All EC2 Instances from a given region """
+""" List All EC2 Instances """
 import os
 
 import boto3
 
-os.environ['AWS_SECRET_ACCESS_KEY'] = 'SecretKey'
-os.environ['AWS_ACCESS_KEY_ID'] = 'AccessKey'
+os.environ['AWS_SECRET_ACCESS_KEY'] = 'SECRET_KEY'
+os.environ['AWS_ACCESS_KEY_ID'] = 'ACCESS_KEY'
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 ec2 = boto3.resource('ec2')
 
 
-def getInstanceName(instance):
+def getAllVPCsDetail():
+    """ Print VPC Name & Id & state & cidr block
+        & subnet
+    """
+    for vpc in ec2.vpcs.all():
+        if getSpecificTag(vpc, 'ict21') == 'group5':
+            print(
+                "Name: {0}\n Id: {1}\n State: {2}\n Cidr block: {3}\n Subnet: {4}\n".format(
+                    vpc.tags[0]['Value'] if vpc.tags else None,
+                    vpc.id,
+                    vpc.state,
+                    vpc.cidr_block,
+                    [(subnet.id, getSpecificTag(subnet, 'Name'), subnet.cidr_block)
+                     for subnet in vpc.subnets.all()]))
+
+
+def getSpecificTag(service, tag_name):
     try:
-        instance_name = [tag['Value']
-                         for tag in instance.tags if tag['Key'] == 'Name']
-        instance_name = instance_name[0]
+        tag = [tag['Value']
+               for tag in service.tags if tag['Key'] == tag_name]
+        tag = tag[0] if tag else None
     except Exception:
-        instance_name = None
-    return instance_name
+        tag = None
+    return tag
+
+
+def getInstanceName(instance):
+    return getSpecificTag(instance, 'Name')
 
 
 def getVPCName(instance):
-    try:
-        vpc = ec2.Vpc(instance.vpc_id)
-        vpc_name = [tag['Value'] for tag in vpc.tags if tag['Key'] == 'Name']
-        vpc_name = vpc_name[0]
-    except Exception:
-        vpc_name = None
-    return vpc_name
+    vpc = ec2.Vpc(instance.vpc_id)
+    return getSpecificTag(vpc, 'Name')
 
 
 def getSubnetName(instance):
-    try:
-        subnet = ec2.Subnet(instance.subnet_id)
-        subnet_name = [tag['Value']
-                       for tag in subnet.tags if tag['Key'] == 'Name']
-        subnet_name = subnet_name[0]
-    except Exception:
-        subnet_name = None
-    return subnet_name
+    subnet = ec2.Subnet(instance.subnet_id)
+    return getSpecificTag(subnet, 'Name')
 
 
 def getSecurityGroupsName(instance):
@@ -54,18 +63,23 @@ def getInstanceDetails():
         & security group name
     """
     for instance in ec2.instances.all():
-        print(
-            "Name: {0}\n Id: {1}\n State: {2}\n Public IP: {3}\n Private IP: {4}\n "
-            "VPC: {5}\n Subnet: {6}\n Security groups: {7}\n".format(
-                getInstanceName(instance),
-                instance.id,
-                instance.state['Name'],
-                instance.public_ip_address,
-                instance.private_ip_address,
-                getVPCName(instance),
-                getSubnetName(instance),
-                getSecurityGroupsName(instance)))
+        if getSpecificTag(instance, 'ict21') == 'group5':
+            print(
+                "Name: {0}\n Id: {1}\n State: {2}\n Public ip: {3}\n Private ip: {4}\n VPC: {5}\n Subnet name: {6}\n  Subnet id: {7}\n  Subnet CIDR Block: {8}\n Security groups: {9}\n".format(
+                    getInstanceName(instance),
+                    instance.id,
+                    instance.state['Name'],
+                    instance.public_ip_address,
+                    instance.private_ip_address,
+                    getVPCName(instance),
+                    getSubnetName(instance),
+                    instance.subnet.id,
+                    instance.subnet.cidr_block,
+                    getSecurityGroupsName(instance)
+                )
+            )
 
 
 if __name__ == '__main__':
     getInstanceDetails()
+    getAllVPCsDetail()
