@@ -34,7 +34,7 @@
                         </select>
                     </div>
                     <hr>
-                    <label>Public Subnet (For Load Balancer) *เลือกอย่างน้อย 2 AZ</label>
+                    <label>Public Subnet for deployment *เลือกอย่างน้อย 2 AZ</label>
                     <div class="form-check" v-for="subnet in selectableSubnets" :key="subnet.SubnetId + 'public'" :value="subnet.SubnetId">
                         <input type="checkbox" :id="subnet.subnetId" class="form-check-input" type="checkbox" :value="subnet.SubnetId" v-model="selectedSubnetsPublic" />
                         <label class="form-check-label" :for="subnet.subnetId">
@@ -44,15 +44,15 @@
                         </label>
                     </div>
                     <hr>
-                    <label>Private Subnet (For EC2) *เลือกอย่างน้อย 2 AZ</label>
-                    <div class="form-check" v-for="subnet in selectableSubnets" :key="subnet.SubnetId + 'private'" :value="subnet.SubnetId">
-                        <input type="checkbox" :id="subnet.subnetId" class="form-check-input" type="checkbox" :value="subnet.SubnetId" v-model="selectedSubnetsPrivate" />
-                        <label class="form-check-label" :for="subnet.subnetId">
-                            {% raw %}
-                                {{ getTagName(subnet.Tags) ? `${getTagName(subnet.Tags)} |` : "" }} {{ subnet.SubnetId }} - {{ subnet.CidrBlock }} - <b>{{ subnet.AvailabilityZone }}</b>
-                            {% endraw %}
-                        </label>
-                    </div>
+{#                    <label>Private Subnet (For EC2) *เลือกอย่างน้อย 2 AZ</label>#}
+{#                    <div class="form-check" v-for="subnet in selectableSubnets" :key="subnet.SubnetId + 'private'" :value="subnet.SubnetId">#}
+{#                        <input type="checkbox" :id="subnet.subnetId" class="form-check-input" type="checkbox" :value="subnet.SubnetId" v-model="selectedSubnetsPrivate" />#}
+{#                        <label class="form-check-label" :for="subnet.subnetId">#}
+{#                            {% raw %}#}
+{#                                {{ getTagName(subnet.Tags) ? `${getTagName(subnet.Tags)} |` : "" }} {{ subnet.SubnetId }} - {{ subnet.CidrBlock }} - <b>{{ subnet.AvailabilityZone }}</b>#}
+{#                            {% endraw %}#}
+{#                        </label>#}
+{#                    </div>#}
                     <input type="hidden" name="app_public_subnets" :value="JSON.stringify(selectedSubnetsPublic)" required>
                     <input type="hidden" name="app_private_subnets" :value="JSON.stringify(selectedSubnetsPrivate)" required>
                     <hr>

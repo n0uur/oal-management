@@ -37,14 +37,54 @@ _session = Session()
 _session.init_app(app)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
     if not session.get('is_permit', False):
         return redirect('/login')
     if not Setting.get('is_setup', False):
         return redirect('setup')
 
-    return render_template("update.html")
+    error = None
+
+    if request.method == "POST":
+        if not request.form.get('app_version', False) or \
+                not request.form.get('app_user_data', False):
+            error = "กรุณากรอกข้อมูลให้ครบถ้วน"
+        else:
+            current_version = Setting.get("current_version")
+            if current_version == request.form.get('app_version'):
+                error = "กรุณากรอกเวอร์ชันใหม่"
+            else:
+                Setting.set('latest_version', request.form.get('app_version'))
+                Setting.set('latest_user_data', request.form.get('app_user_data'))
+                Setting.set('app_status', 'waiting')
+
+    return render_template("update.html", last_ec2_counts=Setting.get('ec2_prefer_counts', 0, int),
+                           current_version=Setting.get("current_version"), error=error)
+
+
+@app.route("/status")
+def status():
+    if not session.get('is_permit', False):
+        return "", 403
+
+    return {
+        "status": Setting.get('app_status', 'error'),
+        "version": Setting.get('current_version')
+    }
+
+
+@app.route("/update/amount", methods=["POST"])
+def update_amount():
+    if not session.get('is_permit', False):
+        return redirect('/login')
+    if not Setting.get('is_setup', False):
+        return redirect('setup')
+
+    if request.form.get('ec2_prefer_amount', False):
+        Setting.set('ec2_prefer_counts', request.form.get('ec2_prefer_amount'))
+
+    return redirect('/')
 
 
 @app.route("/setup", methods=["GET", "POST"])
@@ -90,7 +130,8 @@ def setup():
             ]):
                 error = "กรุณากรอกข้อมูลให้ครบถ้วน"
             else:
-                app_name = re.sub(r'(?<!^)(?=[A-Z])', '_', request.form.get('app_name')).lower().strip().replace(' ', '_')
+                app_name = re.sub(r'(?<!^)(?=[A-Z])', '_', request.form.get('app_name')).lower().strip().replace(' ',
+                                                                                                                 '_')
 
                 Setting.set('app_name', request.form.get('app_name'))
                 Setting.set('latest_version', request.form.get('app_version'))
@@ -163,7 +204,9 @@ def setup():
                     IpAddressType='ipv4',
                 )
 
-                Setting.set('ec2_target_group', res['TargetGroups'][0]['TargetGroupArn'])
+                created_target_group = res['TargetGroups'][0]
+
+                Setting.set('ec2_target_group', created_target_group['TargetGroupArn'])
 
                 # print(res)
 
@@ -183,6 +226,25 @@ def setup():
                     Scheme='internet-facing',
                     Type='application',
                     IpAddressType='ipv4',
+                    SecurityGroups=[
+                        security_group['GroupId']
+                    ]
+                )
+
+                boto3.client(
+                    'elbv2',
+                    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                ).create_listener(
+                    DefaultActions=[
+                        {
+                            'TargetGroupArn': created_target_group['TargetGroupArn'],
+                            'Type': 'forward',
+                        },
+                    ],
+                    LoadBalancerArn=res['LoadBalancers'][0]['LoadBalancerArn'],
+                    Port=80,
+                    Protocol='HTTP',
                 )
 
                 # print(res)

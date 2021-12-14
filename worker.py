@@ -104,7 +104,7 @@ def main():
                     print("creating EC2 for templating... 1/2")
                     # สร้าง AMI Image จาก EC2 -> User Data
                     user_data = Setting.get('latest_user_data')
-                    private_subnet = random.choice(json.loads(Setting.get('deploy_private_subnet',
+                    private_subnet = random.choice(json.loads(Setting.get('deploy_public_subnet',
                                                                           dataType=json.loads)))  # dont even ask me what is this doing, I dunno
 
                     keypair_name = Setting.get('ec2_keypair_name')
@@ -207,7 +207,7 @@ def main():
                     for creatingEc2Index in range(desired_ec2_counts):
 
                         # dont even ask me what is this doing, I dunno
-                        private_subnet = random.choice(json.loads(Setting.get('deploy_private_subnet',
+                        private_subnet = random.choice(json.loads(Setting.get('deploy_public_subnet',
                                                                               dataType=json.loads)))
 
                         instanceName = "group_5_ec2"
@@ -307,7 +307,8 @@ def main():
                 all_ec2 = [
                     _ec2 for _ec2 in ec2_resource.instances.all() if
                     getTag(_ec2, os.environ.get('EC2_GROUP_TAG', 'ict21')) == os.environ.get('EC2_GROUP_VALUE',
-                                                                                             'group5')
+                                                                                             'group5') and
+                    _ec2.state['Name'] != 'terminated'
                 ]
 
                 ec2_counts = len(all_ec2)
@@ -337,7 +338,7 @@ def main():
 
                         for creatingEc2Index in range(desired_ec2_counts - ec2_counts):
                             # dont even ask me what is this doing, I dunno
-                            private_subnet = random.choice(json.loads(Setting.get('deploy_private_subnet',
+                            private_subnet = random.choice(json.loads(Setting.get('deploy_public_subnet',
                                                                                   dataType=json.loads)))
 
                             instanceName = "group_5_ec2"
@@ -373,8 +374,8 @@ def main():
                                         'ResourceType': 'instance',
                                         'Tags': [
                                             {
-                                                'Key': 'ict21',
-                                                'Value': 'group5_temp'
+                                                'Key': os.environ.get('EC2_GROUP_TAG', 'ict21'),
+                                                'Value': os.environ.get('EC2_GROUP_VALUE', 'group5')
                                             },
                                             {
                                                 'Key': 'Name',
@@ -390,6 +391,12 @@ def main():
                             )
 
                             creating_instance_id = ec2_create_response['Instances'][0]['InstanceId']
+
+                            # wait before register target to target group
+                            instance_state = ec2_resource.Instance(id=creating_instance_id).state['Name']
+                            while instance_state != 'running':
+                                instance_state = ec2_resource.Instance(id=creating_instance_id).state['Name']
+                                time.sleep(5)
 
                             elb_client.register_targets(
                                 TargetGroupArn=target_group_arn,
