@@ -282,6 +282,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
 
                     desired_ec2_counts = Setting.get('ec2_prefer_counts', 0, dataType=int)
 
+                    target_group_arn = Setting.get('ec2_target_group')
+
                     for creatingEc2Index in range(desired_ec2_counts):
 
                         # dont even ask me what is this doing, I dunno
@@ -354,8 +356,6 @@ chmod 400 /home/ec2-user/.ssh/gitkey
 
                         time.sleep(10)
 
-                        target_group_arn = Setting.get('ec2_target_group')
-
                         elb_client.register_targets(
                             TargetGroupArn=target_group_arn,
                             Targets=[
@@ -377,6 +377,18 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                     ]
 
                     if len(old_ec2) > 1:
+                        elb_client.deregister_targets(
+                            TargetGroupArn=target_group_arn,
+                            Targets=[
+                                {
+                                    'Id': inst,
+                                }
+                                for inst in old_ec2
+                            ]
+                        )
+
+                        time.sleep(2)
+
                         ec2_client.terminate_instances(
                             InstanceIds=old_ec2,
                         )
@@ -407,6 +419,11 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                     if ec2_counts > desired_ec2_counts:  # ลบ
 
                         print("removing unused EC2")
+
+                        elb_client.deregister_targets(
+                            TargetGroupArn=Setting.get('ec2_target_group'),
+                            Targets=[{'Id': e2.id} for e2 in all_ec2[:(ec2_counts - desired_ec2_counts)]]
+                        )
 
                         ec2_client.terminate_instances(
                             InstanceIds=[e2.id for e2 in all_ec2[:(ec2_counts - desired_ec2_counts)]],
