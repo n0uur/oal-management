@@ -39,7 +39,7 @@ docker build -t oal-management <this repository path on your system>
 ```
 4. Run Docker image on your system _Recommend to use webserver like nginx as reverseproxy or caddy_
 ```
-docker run -p 80:8000 oal-management -d
+docker run -p 80:8000 -d oal-management
 ```
 5. Open Web browser using your server IP Address (default protocol is `http` port `80`)
 6. Setup your system :)
