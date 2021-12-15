@@ -1,6 +1,7 @@
 """
 Worker thread of OAL Management System
 """
+import base64
 import threading
 import time
 import os
@@ -166,6 +167,25 @@ def main():
 
                     Setting.set('app_status', 'working-ami')
 
+                    prefix_user_data = """#!/bin/bash
+
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+ssh-keyscan -H github.com >> /home/ec2-user/.ssh/known_hosts
+echo -n '%s' | base64 --decode > /home/ec2-user/.ssh/gitkey
+echo -n '%s' | base64 --decode > /home/ec2-user/.ssh/gitkey.pub
+echo -n 'SG9zdCBnaXRodWIuY29tCiAgSWRlbnRpdHlGaWxlIH4vLnNzaC9naXRrZXk=' | base64 --decode > /home/ec2-user/.ssh/config
+chown ec2-user /home/ec2-user/.ssh/config
+chown ec2-user /home/ec2-user/.ssh/known_hosts
+chown ec2-user /home/ec2-user/.ssh/gitkey
+chown ec2-user /home/ec2-user/.ssh/gitkey.pub
+chmod 600 /home/ec2-user/.ssh/config
+chmod 400 /home/ec2-user/.ssh/gitkey
+
+""" % (
+                        base64.b64encode(Setting.get('ec2_keypair_private').encode('ascii')).decode('ascii'),
+                        base64.b64encode(Setting.get('ec2_keypair_public').encode('ascii')).decode('ascii')
+                    )
+
                     ec2_create_response = ec2_client.run_instances(
                         BlockDeviceMappings=[
                             {
@@ -179,8 +199,11 @@ def main():
                             },
                         ],
                         ImageId=imageID,
+                        SecurityGroupIds=[
+                            Setting.get('ec2_security_group')
+                        ],
                         InstanceType=instanceType,
-                        UserData=user_data,
+                        UserData=prefix_user_data + user_data.replace('\r', ''),
                         KeyName=keyName,
                         SubnetId=subnetId,
                         MaxCount=1,
@@ -215,10 +238,16 @@ def main():
 
                     print("creating AMI image from EC2... 1/9999")
 
+                    # wait for user-data finished
+                    Setting.set('app_status', 'working-ami-userdata')
+                    time.sleep(180)
+
                     ami_id = createAMI(
                         instanceId=creating_instance_id,
                         ami_name="ami-template-%s-%s" % (latest_version, str(uuid.uuid4())[:8])
                     )
+
+                    Setting.set('app_status', 'working-ami')
 
                     print("creating AMI image from EC2... 15/9999")
 
@@ -274,6 +303,9 @@ def main():
                                         'VolumeType': volumeType
                                     },
                                 },
+                            ],
+                            SecurityGroupIds=[
+                                Setting.get('ec2_security_group')
                             ],
                             ImageId=imageID,
                             InstanceType=instanceType,
@@ -404,6 +436,9 @@ def main():
                                             'VolumeType': volumeType
                                         },
                                     },
+                                ],
+                                SecurityGroupIds=[
+                                    Setting.get('ec2_security_group')
                                 ],
                                 ImageId=imageID,
                                 InstanceType=instanceType,
