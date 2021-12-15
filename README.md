@@ -65,7 +65,6 @@ sudo su ec2-user -c "git clone git@github.com:n0uur/sample-website-007.git /var/
 - [Python](https://www.python.org/) 3.7 or later
 - [AWS SDK](https://aws.amazon.com/th/sdk-for-python/) for Python
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/)
-- [ngrok](https://ngrok.com/)
 
 ### Deployment Tools
 - Docker
