@@ -114,7 +114,7 @@ def setup():
     ec2 = boto3.client('ec2',
                        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
                        aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
-                       region=os.environ.get('DATABASE_REGION', 'us-east-1')
+                       region_name=os.environ.get('DATABASE_REGION', 'us-east-1')
                    )
 
     if request.method == "POST":
@@ -198,7 +198,7 @@ def setup():
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
                     aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
-                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
+                    region_name=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_target_group(
                     Name=("%s-TG" % app_name).replace('_', '-'),
                     Protocol="HTTP",
@@ -224,7 +224,7 @@ def setup():
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
                     aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
-                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
+                    region_name=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_load_balancer(
                     Name=('%s-ELB' % app_name).replace('_', '-'),
                     Subnets=list(json.loads(public_subnets)),
@@ -240,7 +240,7 @@ def setup():
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
                     aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
-                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
+                    region_name=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_listener(
                     DefaultActions=[
                         {
