@@ -484,6 +484,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                                 instance_state = ec2_resource.Instance(id=creating_instance_id).state['Name']
                                 time.sleep(5)
 
+                            time.sleep(10)
+
                             elb_client.register_targets(
                                 TargetGroupArn=target_group_arn,
                                 Targets=[
