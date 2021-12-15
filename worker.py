@@ -350,6 +350,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
 
                         # ใช้ AMI สร้าง EC2 ชุดใหม่ เท่าจำนวนเดิม พร้อม Tag ใหม่ + เพิ่มเข้า Target Group
 
+                        time.sleep(10)
+
                         target_group_arn = Setting.get('ec2_target_group')
 
                         elb_client.register_targets(
