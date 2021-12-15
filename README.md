@@ -28,6 +28,7 @@ Project Status: `Testing`
 - AWS IAM User permission allow to access resource `DynamoDB`, `EC2`, `VPC` and `ELBv2`
 - Pre-created `VPC` with minimum 2 `Public Subnet`
 - Website application with `User Data` that using `HTTP` port `80`
+- Internet connection what can be connect to AWS console
 
 #### Setup
 1. Clone this repository (aka. Download)
