@@ -2,9 +2,13 @@
 OAL System
 AWS EC2 group rolling update system using Python boto3, Flask and friends
 
-Project Status: `Testing`
+Project Status: `Finished`
 
 ![aws-cloud-project drawio (1)](https://user-images.githubusercontent.com/50010805/144700727-8ed46fd7-9bb4-49a2-b02d-0a6434207274.png)
+
+## Disclaimer
+This project code just not good as it should be due to time limit.
+Do not use this project as production service but you can still use this project as a concept or for designing your own system.
 
 ## Information
 
@@ -83,9 +87,6 @@ sudo su ec2-user -c "git clone git@github.com:n0uur/sample-website-007.git /var/
 - [:white_check_mark:] RestAPI Authentication
 - [:white_check_mark:] Storing Setting to `DynamoDB`
 
-### Cancled
-- [:x:] Get EC2 CPU Utilization
-
 ### Management Website
 - [:white_check_mark:] Login Page
 - [:white_check_mark:] Auto scaling Management
@@ -96,5 +97,20 @@ sudo su ec2-user -c "git clone git@github.com:n0uur/sample-website-007.git /var/
 - [Boto3 (AWS SDK)](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
 - [Flask Python Deployment](https://flask.palletsprojects.com/en/2.0.x/deploying/wsgi-standalone/#gunicorn)
 
+## Developers (in Thai)
 
+| รหัสนักศึกษา | ชื่อ-นามสกุล | Github |
+|--|--|--|
+| 62070002 | นายกฤตณัฏฐ์ ศิริพรนพคุณ | [n0uur](https://github.com/n0uur) |
+| 62070016 | นายกิตติภัค พนารินทร์ | [hikariz01](https://github.com/hikariz01) |
+| 62070085 | นายธเนศ สุขได้พึ่ง | [Tanate62070085](https://github.com/Tanate62070085) |
+| 62070088 | นายธวัชชัย ฮานอน | [Hanon088](https://github.com/Hanon088) |
+| 62070091 | นายธัชวุฒิ วิจิตรบรรจง | [FuMiRiO](https://github.com/FuMiRiO) |
 
+<hr>
+
+__Introduction to Cloud Technology__ (06016335)
+
+_Faculty of Information Technology, King Mongkut's Institute of Technology Ladkrabang_ 
+
+_2021_
