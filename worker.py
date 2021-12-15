@@ -34,7 +34,8 @@ def createAMI(instanceId, ami_name="g5_123"):
     ec2_client = boto3.client(
         'ec2',
         aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-        aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+        aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+        region=os.environ.get('DATABASE_REGION', 'us-east-1')
     )
     response = ec2_client.create_image(
         InstanceId=instanceId,
@@ -121,19 +122,22 @@ def main():
                 ec2_resource = boto3.resource(
                     'ec2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 )
 
                 ec2_client = boto3.client(
                     'ec2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 )
 
                 elb_client = boto3.client(
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 )
 
                 # ดึง Latest Version และ Current Version จาก Setting

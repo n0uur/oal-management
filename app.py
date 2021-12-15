@@ -111,8 +111,11 @@ def setup():
         error = "Access Key หรือ Secret Key ของ AWS ไม่ถูกต้อง  "
         return render_template("nosetup.html", error=error)
 
-    ec2 = boto3.client('ec2', aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                       aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'))
+    ec2 = boto3.client('ec2',
+                       aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
+                       aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                       region=os.environ.get('DATABASE_REGION', 'us-east-1')
+                   )
 
     if request.method == "POST":
 
@@ -194,7 +197,8 @@ def setup():
                 res = boto3.client(
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_target_group(
                     Name=("%s-TG" % app_name).replace('_', '-'),
                     Protocol="HTTP",
@@ -219,7 +223,8 @@ def setup():
                 res = boto3.client(
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_load_balancer(
                     Name=('%s-ELB' % app_name).replace('_', '-'),
                     Subnets=list(json.loads(public_subnets)),
@@ -234,7 +239,8 @@ def setup():
                 boto3.client(
                     'elbv2',
                     aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
-                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY')
+                    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'),
+                    region=os.environ.get('DATABASE_REGION', 'us-east-1')
                 ).create_listener(
                     DefaultActions=[
                         {
