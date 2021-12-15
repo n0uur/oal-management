@@ -325,8 +325,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                                     'ResourceType': 'instance',
                                     'Tags': [
                                         {
-                                            'Key': 'ict21',
-                                            'Value': 'group5_temp'
+                                            'Key': os.environ.get('EC2_GROUP_TAG', 'ict21'),
+                                            'Value': os.environ.get('EC2_GROUP_VALUE', 'group5')
                                         },
                                         {
                                             'Key': 'Name',
@@ -342,6 +342,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                         )
 
                         creating_instance_id = ec2_create_response['Instances'][0]['InstanceId']
+
+                        time.sleep(10)
 
                         instance_state = ec2_resource.Instance(id=creating_instance_id).state['Name']
                         while instance_state != 'running':
@@ -477,6 +479,8 @@ chmod 400 /home/ec2-user/.ssh/gitkey
                             )
 
                             creating_instance_id = ec2_create_response['Instances'][0]['InstanceId']
+
+                            time.sleep(10)
 
                             # wait before register target to target group
                             instance_state = ec2_resource.Instance(id=creating_instance_id).state['Name']
