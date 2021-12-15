@@ -1,6 +1,7 @@
 """
 Worker thread of OAL Management System
 """
+import threading
 import time
 import os
 import uuid
@@ -53,12 +54,45 @@ def createAMI(instanceId, ami_name="g5_123"):
     return response['ImageId']
 
 
+NODE_ID = str(uuid.uuid4())
+
+
+def struggle():
+    """struggle thread for master node"""
+    print('started struggle thread')
+    while True:
+        try:
+            if Setting.get('master_node') == NODE_ID:
+                Setting.set('master_node_last_response', str(time.time()))
+                print('response to secondary nodes')
+            else:
+                if time.time() - Setting.get('master_node_last_response', 0, dataType=float) > 60:
+                    Setting.set('master_node', NODE_ID)
+                    Setting.set('master_node_last_response', str(time.time()))
+                    print('taking over main node')
+                    time.sleep(5)
+                    if Setting.get('master_node') == NODE_ID:
+                        print("winning master node race!")
+                    else:
+                        print("losing, changing back to secondary node")
+        except Exception as e:
+            print("struggle thread error: ", e)
+            time.sleep(5)
+
+        time.sleep(20)
+
+
 def main():
     """Main thread of program"""
 
     try:
 
+        print("starting up...")
+
         next_update = time.time()
+
+        print("creating struggle thread...")
+        struggle_thread = threading.Thread(target=struggle, daemon=True).start()
 
         if not Setting.get('is_setup', False, bool):
             print("The system is not setup yet.")
@@ -66,11 +100,22 @@ def main():
             exit(0)
 
         while True:
-            if (time.time() < next_update):
+            if time.time() < next_update:
                 time.sleep(1)
                 continue
 
             try:
+
+                if Setting.get('master_node') != NODE_ID:
+                    time.sleep(1)
+                    continue
+
+                time.sleep(15)
+
+                # just need make sure that struggle thread really win the fight
+                if Setting.get('master_node') != NODE_ID:
+                    time.sleep(1)
+                    continue
 
                 ec2_resource = boto3.resource(
                     'ec2',
