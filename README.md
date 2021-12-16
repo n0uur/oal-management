@@ -89,7 +89,7 @@ sudo su ec2-user -c "git clone git@github.com:n0uur/sample-website-007.git /var/
 
 ### Management Website
 - [:white_check_mark:] Login Page
-- [:white_check_mark:] Auto scaling Management
+- [:white_check_mark:] Scaling Management
 - [:white_check_mark:] Instances Mangement
 - [:white_check_mark:] Instance Setup Preferences
 
